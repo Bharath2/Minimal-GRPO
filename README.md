@@ -3,7 +3,7 @@ Implementation of Group Relative Policy Optimization (GRPO) to fine-tune Open La
 
 
 ## Overview
-This project implements a minimal and hackable pipeline for fine-tuning language models using GRPO strategy introduced by [DeepSeekMath](https://arxiv.org/abs/2402.03300). This approach utilizes group-based relative advantage estimates to guide the optimization. The training data comprises synthetic math expressions and their solutions. The framework is flexible and can be extended to other tasks.
+This project implements a simple and customizable pipeline for fine-tuning language models using GRPO strategy introduced by [DeepSeekMath](https://arxiv.org/abs/2402.03300). This approach utilizes group-based relative advantage estimates to guide the optimization. The training data comprises synthetic math expressions and their solutions. The framework is flexible and can be extended to other tasks.
 
 ## Requirements
 pytorch **·** transformers **·** peft **·** flash-attn **·** pyyaml **·** tensorboard
