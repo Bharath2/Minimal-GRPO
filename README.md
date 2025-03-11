@@ -14,8 +14,8 @@ pytorch **·** transformers **·** peft **·** flash-attn **·** pyyaml **·** t
 2. Then, run the following command to fine_tune the model:
 ```bash
 python3 grpo_train.py
-If needed, replace the existing dataset with your custom data.
 ```
+If needed, replace the existing dataset with your custom data.
 
 ## Results
 The table below demonstrates the improvement in model responses before and after GRPO fine-tuning:
