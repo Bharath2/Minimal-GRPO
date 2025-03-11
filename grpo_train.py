@@ -20,7 +20,7 @@ with open("config.yml", 'r') as file:
     config = yaml.safe_load(file)
     
 system_prompt = """A conversation between User and Assistant. 
-When the user asks to solve a math expression or polynomial expansion, you must provide a step-by-step reasoning followed by the final answer. 
+When the user asks to solve a math expression, you must provide a step-by-step reasoning followed by the final answer. 
 your intermediate steps must be enclosed in <think>...</think> tag, and the final answer enclosed in <answer>...</answer> tag. 
 Each step must be numbered as shown below:
 <think>
