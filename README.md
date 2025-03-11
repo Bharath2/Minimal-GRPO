@@ -21,13 +21,11 @@ If needed, replace the existing dataset with your custom data.
 The table below demonstrates the improvement in model responses before and after GRPO fine-tuning:
 
 **Model: LlaMa-3.2-1B-Instruct**
-| | |
-|---|---|
+
 |  **Prompt:**  | **Expand 3\*(x+1)\*(x+2)** |
 |  **Responses:** | |
 | <div align="center">Before Fine-tuning</div> | <div align="center">After GRPO Fine-tuning</div> |
 | **\<think>**<br>1. Multiply the first two terms: 3*(x+1) = 3x + 3<br>2. Multiply the result by the third term: (3x + 3)*(x+2)<br>**\</think>**<br>**\<answer>** 3x^2 + 3x + 6x + 6 **\</answer>** | **\<think>**<br>1. To expand the expression 3*(x+1)*(x+2), we need to apply the distributive property to expand the expression.<br>2. The distributive property states that a(b+c) = ab + ac.<br>3. So, we can expand the expression as 3*(x+1)*(x+2) = 3*(x*x + x*2 + 1*x + 1*2).<br>4. Now, we can simplify the expression by multiplying the terms.<br>5. 3*(x*x + x*2 + 1*x + 1*2) = 3*x^2 + 6*x + 3*x + 2.<br>6. Combine like terms.<br>7. 3*x^2 + 6*x + 3*x + 2 = 3*x^2 + 9*x + 2.<br>8. The final expanded expression is 3*x^2 + 9*x + 2.<br>**\</think>**<br>**\<answer>** 3*x^2 + 9*x + 2 **\</answer>** |
-|---|---|
 |  **Prompt:**  | **Solve 78-(3\*(47-2)+2)** |
 |  **Responses:** | |
 | <div align="center">Before Fine-tuning</div> | <div align="center">After GRPO Fine-tuning</div> |
