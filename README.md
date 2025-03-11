@@ -10,10 +10,11 @@ pytorch **·** transformers **·** peft **·** flash-attn **·** pyyaml **·** t
 
 ## Usage
 
-1. Edit the `config.yml` file with the required settings.
+1. Edit the `config.yml` file with the required hyperparameters and Language model path.
 2. Then, run the following command to fine_tune the model:
 ```bash
 python3 grpo_train.py
+If needed, replace the existing dataset with your custom data.
 ```
 
 ## Results
