@@ -21,7 +21,8 @@ If needed, replace the existing dataset with your custom data.
 The table below demonstrates the improvement in model responses before and after GRPO fine-tuning:
 
 **Model: LlaMa-3.2-1B-Instruct**
-
+| | |
+|---|---|
 |  **Prompt:**  | **Expand 3\*(x+1)\*(x+2)** |
 |  **Responses:** | |
 | <div align="center">Before Fine-tuning</div> | <div align="center">After GRPO Fine-tuning</div> |
