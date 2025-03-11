@@ -1,5 +1,5 @@
-# Model Identifier or path
-model_identifier: "Qwen/Qwen2.5-0.5B-Instruct"
+# Model Identifier on HuggingFace or local path
+model_identifier: "Qwen/Qwen2.5-0.5B-Instruct"  # meta-llama/Llama-3.2-1B-Instruct
 
 # Training parameters
 group_size: 16                # Group size used in GRPO
