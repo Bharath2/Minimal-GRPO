@@ -12,10 +12,11 @@ class PolicyLoss(nn.Module):
         kl_weight (float, optional): Weight for KL divergence term. Defaults to 0.05.
     """
 
-    def __init__(self, clip_eps = 0.2, kl_weight = 0.05):
+    def __init__(self, clip_eps = 0.2, kl_weight = 0.05,  max_len = None):
         super().__init__()
         self.clip_eps = clip_eps
         self.kl_weight = kl_weight
+        self.max_len = max(1, max_len)
         
     def forward(self, log_probs, old_log_probs, advantages, ref_log_probs = None, action_mask = None): 
         """Forward pass to compute the Policy Loss.
@@ -45,9 +46,12 @@ class PolicyLoss(nn.Module):
             kl = log_ratio.exp() - log_ratio - 1
             loss = loss + self.kl_weight * kl
 
-        # If action_mask is None, use mean, otherwise use masked average
-        if action_mask is None:
-            avg_loss = loss.mean()
-        else:
-            avg_loss = (loss * action_mask).sum() / (action_mask.sum() + 1e-8)
+        # If action_mask is not None, use masked average, otherwise use mean
+        action_length = log_probs.shape[1]
+        if action_mask:
+            loss = loss * action_mask
+            action_length = action_mask.sum(axis = 1)
+        # if max_len is specified, use max_len to normalize (DR.GRPO)
+        if self.max_len: action_length = self.max_len
+        avg_loss = (loss.sum(axis = 1) / (action_length + 1e-3)).mean()
         return avg_loss
