@@ -88,7 +88,7 @@ for batch in train_loader:
             # Compute advantages
             mean_r = rewards.mean()
             std_r = rewards.std()
-            advantages = (rewards - mean_r) / (std_r + 1e-6)
+            advantages = (rewards - mean_r) # / (std_r + 1e-6)
             reward += mean_r
 
             # Store experience
