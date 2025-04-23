@@ -18,7 +18,12 @@ torch.set_float32_matmul_precision('medium')
 # Open and load the YAML file as a dictionary
 with open("config.yml", 'r') as file:
     config = yaml.safe_load(file)
-    
+
+
+# Get training data (Replace with custom data)
+train_loader = DataLoader(MathDataset(), batch_size=256, num_workers=4, pin_memory=True)
+
+# Edit system prompt if required 
 system_prompt = """A conversation between User and Assistant. 
 When the user asks to solve a math expression, you must provide a step-by-step reasoning followed by the final answer. 
 your intermediate steps must be enclosed in <think>...</think> tag, and the final answer enclosed in <answer>...</answer> tag. 
@@ -31,10 +36,7 @@ and so on...
 <answer>final answer</answer>
 """
 
-# Initialize Accelerator
-accelerator = Accelerator()
-
-# current model
+# current model (to fine-tune)
 llm = HuggingFaceLM(model_identifier=config['model_identifier'], system_prompt=system_prompt, 
                     use_lora=config['use_lora'], lora_config=config['lora_config'])
 llm.model.train()
@@ -43,10 +45,7 @@ llm.model.train()
 llm_ref = HuggingFaceLM(model_identifier=config['model_identifier'], system_prompt=system_prompt)
 llm_ref.model.eval()
 
-# Get training data
-train_loader = DataLoader(MathDataset(), batch_size=256, num_workers=4, pin_memory=True)
-
-# Initialize training components
+# Initialize training components (loss, optimizer)
 loss_fn = PolicyLoss(kl_weight=float(config['kl_weight']))
 optimizer = AdamW(llm.model.parameters(), lr=float(config['learning_rate']))
 
