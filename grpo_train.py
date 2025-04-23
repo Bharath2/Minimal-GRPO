@@ -50,6 +50,7 @@ loss_fn = PolicyLoss(kl_weight=float(config['kl_weight']))
 optimizer = AdamW(llm.model.parameters(), lr=float(config['learning_rate']))
 
 # Prepare models, optimizer, and data loader with Accelerator
+accelerator = Accelerator()
 llm.model, llm_ref.model, optimizer, train_loader = accelerator.prepare(llm.model, llm_ref.model, optimizer, train_loader)
 
 # Define the Experience tuple for storing rollout data
