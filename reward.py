@@ -13,7 +13,7 @@ def reward_function(target, completion):
     """
     # Only one <think> and <answer> tag should be present
     if any(completion.count(tag) != 1 for tag in ["<think>", "</think>", "<answer>", "</answer>"]):
-        return 0.0
+        return -0.25
 
     # Extract answer from completion text between <answer> tags
     pattern = r"^\s*<think>\n(.*?)\n</think>\n<answer>(.*?)</answer>\s*$"
@@ -21,7 +21,7 @@ def reward_function(target, completion):
     if match: 
         generated_answer = match.group(2)
     else: 
-        return 0.0
+        return -0.25
         
     try:
         if target.isdigit():
@@ -29,7 +29,7 @@ def reward_function(target, completion):
             target_num = int(target)
             if generated_answer.isdigit():
                 generated_num = int(generated_answer)
-            else: return 0.0
+            else: return -0.25
             value_diff = abs(target_num - generated_num) 
             # Exact match reward   
             if value_diff == 0: return 1.0 
@@ -50,4 +50,4 @@ def reward_function(target, completion):
             reward = min(3.0, matching_terms)
             return (reward + 1.0)/5.0
     except: 
-        return 0.0
+        return -0.25
