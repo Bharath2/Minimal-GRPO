@@ -38,11 +38,13 @@ and so on...
 
 # current model (to fine-tune)
 llm = HuggingFaceLM(model_identifier=config['model_identifier'], system_prompt=system_prompt, 
-                    use_lora=config['use_lora'], lora_config=config['lora_config'])
+                    use_lora=config['use_lora'], lora_config=config['lora_config'],
+                    cache_dir=config.get('cache_dir'))
 llm.model.train()
 
 # Reference model
-llm_ref = HuggingFaceLM(model_identifier=config['model_identifier'], system_prompt=system_prompt)
+llm_ref = HuggingFaceLM(model_identifier=config['model_identifier'], system_prompt=system_prompt,
+                        cache_dir=config.get('cache_dir'))
 llm_ref.model.eval()
 
 # Initialize training components (loss, optimizer)

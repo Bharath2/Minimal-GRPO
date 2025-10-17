@@ -1,5 +1,8 @@
 # Model Identifier on HuggingFace or local path
-model_identifier: "Qwen/Qwen2.5-0.5B-Instruct"  # meta-llama/Llama-3.2-1B-Instruct
+model_identifier: "Qwen/Qwen2.5-0.5B-Instruct" #Qwen/Qwen2.5-Coder-3B-Instruct"  # meta-llama/Llama-3.2-1B-Instruct
+
+# Model cache directory (set to "./models" to download to local directory, or None for default HF cache)
+cache_dir: "./models"
 
 # Training parameters
 group_size: 16                # Group size used in GRPO

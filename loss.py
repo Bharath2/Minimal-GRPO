@@ -16,7 +16,7 @@ class PolicyLoss(nn.Module):
         super().__init__()
         self.clip_eps = clip_eps
         self.kl_weight = kl_weight
-        self.max_len = max(1, max_len)
+        self.max_len = max(1, max_len) if max_len is not None else None
         
     def forward(self, log_probs, old_log_probs, advantages, ref_log_probs = None, action_mask = None): 
         """Forward pass to compute the Policy Loss.
@@ -48,10 +48,10 @@ class PolicyLoss(nn.Module):
 
         # If action_mask is not None, use masked average, otherwise use mean
         action_length = log_probs.shape[1]
-        if action_mask:
+        if action_mask is not None:
             loss = loss * action_mask
             action_length = action_mask.sum(axis = 1)
         # if max_len is specified, use max_len to normalize (DR.GRPO)
-        if self.max_len: action_length = self.max_len
+        if self.max_len is not None: action_length = self.max_len
         avg_loss = (loss.sum(axis = 1) / (action_length + 1e-3)).mean()
         return avg_loss

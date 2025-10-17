@@ -18,6 +18,7 @@ class HuggingFaceLM:
         device (str or torch.device): Device to load the model on (e.g., "cuda" or torch.device("cuda")).
         system_prompt (str, optional): A system prompt to prepend to all inputs.
         model_class (callable, optional): The model class to use; defaults to AutoModelForCausalLM.
+        cache_dir (str, optional): Directory to cache downloaded models. If None, uses default HF cache.
     """
     def __init__(
         self,
@@ -27,10 +28,14 @@ class HuggingFaceLM:
         system_prompt=None,
         model_class = None,
         use_lora = False,
-        lora_config = None
+        lora_config = None,
+        cache_dir = None
     ):
         # Initialize tokenizer with padding token
-        self.tokenizer = AutoTokenizer.from_pretrained(model_identifier)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_identifier,
+            cache_dir=cache_dir
+        )
         self.tokenizer.pad_token = self.tokenizer.eos_token
         
         if model_class is None:
@@ -43,6 +48,7 @@ class HuggingFaceLM:
             attn_implementation="flash_attention_2",
             torch_dtype=torch.bfloat16 if bf16 else "auto",
             device_map=device,
+            cache_dir=cache_dir,
         )
         self.system_prompt = system_prompt
         
