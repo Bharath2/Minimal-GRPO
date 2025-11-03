@@ -3,7 +3,7 @@
 A minimal and hackable implementation of fine-tuning Open Language Models (LLaMA, Qwen, etc.) on mathematical reasoning tasks using two approaches:
 
 - **GRPO (Group Relative Policy Optimization)**: Gradient-based RL policy optimization introduced by [DeepSeekMath](https://arxiv.org/abs/2402.03300), with support for LoRA adaptation
-- **ES (Evolution Strategies)**: Gradient-free evolutionary optimization with full parameter fine-tuning based recent work by ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372))
+- **ES (Evolution Strategy)**: Gradient-free evolutionary optimization with full parameter fine-tuning based recent work by ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372))
 
 Both approaches are designed to be simple, customizable, and effective for reinforcement learning from verifiable rewards. This repo currently includes **GSM8K** and **MathExpr** datasets, and can be easily adapted to other datasets and tasks.
 
