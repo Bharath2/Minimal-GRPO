@@ -1,15 +1,15 @@
 # Minimal-GRPO
 
-A minimal and hackable implementation of fine-tuning Open Language Models (LLaMA, Qwen, etc.) on mathematical reasoning tasks using two approaches:
+A minimal and customizable implementation for fine-tuning Open Language Models (LLaMA, Qwen, etc.) on reasoning tasks with verifiable rewards, using two approaches:
 
 - **GRPO (Group Relative Policy Optimization)**: Gradient-based RL policy optimization introduced by [DeepSeekMath](https://arxiv.org/abs/2402.03300), with support for LoRA adaptation
 - **ES (Evolution Strategy)**: Gradient-free evolutionary optimization with full parameter fine-tuning based recent work by ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372))
 
-Both approaches are designed to be simple, customizable, and effective for reinforcement learning from verifiable rewards. This repo currently includes **GSM8K** and **MathExpr** datasets, and can be easily adapted to other datasets and tasks.
+This repo currently includes **GSM8K** (by OpenAI) and **MathExpr** datasets, and can be adapted to other tasks.
 
 ## Features
 
-- ✅ **Clean, minimal codebase**: Easy to understand and modify
+- ✅ **Effective, minimal codebase**: Easy to understand and modify
 - ✅ **Two optimization strategies**: Compare gradient-based (GRPO) vs gradient-free (ES) approaches
 - ✅ **LoRA support for GRPO**: Parameter-efficient fine-tuning with PEFT
 - ✅ **Full parameter ES fine-tuning**: Direct optimization in billion-parameter spaces
@@ -50,18 +50,7 @@ python grpo_train.py
 tensorboard --logdir=grpo_logs
 ```
 
-## Datasets and Custom Tasks
-
-### Included Datasets
-
-The project currently includes two mathematical reasoning datasets:
-
-1. **GSM8KDataset**: Grade School Math 8K problems by OpenAI
-2. **MathExprDataset**: Mathematical expression evaluation tasks
-
-Both datasets are implemented in the `datasets.py` file and can be easily swapped in the training scripts.
-
-### Adapting to Your Own Tasks
+## Adapting to Your Own Tasks
 
 To adapt this code to your own dataset and task:
 
