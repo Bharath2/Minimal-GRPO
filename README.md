@@ -90,5 +90,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## Acknowledgments
 
-- Built with [PyTorch](https://pytorch.org/), [Transformers](https://huggingface.co/transformers/), and [Accelerate](https://huggingface.co/docs/accelerate/)
-- Models from [Hugging Face](https://huggingface.co/)
+- Built with [PyTorch](https://pytorch.org/), [Transformers](https://huggingface.co/transformers/), [Accelerate](https://huggingface.co/docs/accelerate/) and Models from [Hugging Face](https://huggingface.co/)
