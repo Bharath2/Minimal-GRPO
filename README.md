@@ -67,7 +67,7 @@ To adapt this code to your own dataset and task:
 - Combines PPO-style clipping with KL divergence regularization
 - Maintains a reference model to prevent catastrophic forgetting
 - Efficiently leverages gradient information for policy improvement
-- **Uses LoRA (Low-Rank Adaptation)** for parameter-efficient fine-tuning
+- **LoRA (Low-Rank Adaptation)** for parameter-efficient fine-tuning
 
 ## ES (Evolution Strategies)
 
