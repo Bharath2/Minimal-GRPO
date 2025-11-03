@@ -1,79 +1,126 @@
 # Minimal-GRPO
-Implementation of Group Relative Policy Optimization (GRPO) to fine-tune Open Language Models like LlaMa-3.2, Qwen2.5 for Math Tasks.
 
+A minimal and hackable implementation of fine-tuning Open Language Models (LLaMA, Qwen, etc.) on mathematical reasoning tasks using two approaches:
 
-## Overview
-This project implements a simple and customizable pipeline for fine-tuning language models using GRPO strategy introduced by [DeepSeekMath](https://arxiv.org/abs/2402.03300). This approach utilizes group-based relative advantage estimates to guide the optimization. The training data comprises synthetic math expressions and their solutions. The framework is flexible and can be extended to other tasks.
+- **GRPO (Group Relative Policy Optimization)**: Gradient-based RL policy optimization with support for LoRA adaptation
+- **ES (Evolution Strategies)**: Gradient-free evolutionary optimization with full parameter fine-tuning
+
+Both approaches are designed to be simple, customizable, and effective for reinforcement learning from verifiable rewards. This repo currently includes **GSM8K** and **MathExpr** datasets, and can be easily adapted to other datasets and tasks.
+
+### GRPO (Group Relative Policy Optimization)
+
+Based on the approach from [DeepSeekMath](https://arxiv.org/abs/2402.03300), GRPO is a gradient-based reinforcement learning algorithm that:
+- Uses group-based advantage estimation for stable policy updates
+- Combines PPO-style clipping with KL divergence regularization
+- Maintains a reference model to prevent catastrophic forgetting
+- Efficiently leverages gradient information for policy improvement
+- **Uses LoRA (Low-Rank Adaptation)** for parameter-efficient fine-tuning
+
+### ES (Evolution Strategies)
+
+Based on recent work showing ES can scale to billion-parameter LLMs ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372)), Evolution Strategies is a gradient-free optimization approach inspired by natural evolution. It:
+- Perturbs model parameters with Gaussian noise
+- Evaluates fitness using task-specific rewards
+- Updates parameters based on relative performance (z-score normalization)
+- Requires only forward passes (no backpropagation)
+- Less prone to reward hacking than RL methods
+
+Recent research demonstrates that ES can successfully fine-tune LLMs with billions of parameters, outperforming RL methods in sample efficiency, robustness, and stability, particularly on tasks with sparse outcome-only rewards.
+
+## Features
+
+- ✅ **Clean, minimal codebase**: Easy to understand and modify
+- ✅ **Two optimization strategies**: Compare gradient-based (GRPO) vs gradient-free (ES) approaches
+- ✅ **LoRA support for GRPO**: Parameter-efficient fine-tuning with PEFT
+- ✅ **Full parameter ES fine-tuning**: Direct optimization in billion-parameter spaces
+- ✅ **Flexible configuration**: YAML-based configuration for both algorithms
+- ✅ **Multiple datasets**: GSM8K and MathExpr included, easily extensible
+- ✅ **Custom rewards**: Easily adapt to your own tasks and reward functions
 
 ## Requirements
-pytorch **·** transformers **·** peft **·** flash-attn **·** pyyaml **·** tensorboard
 
-## Usage
-
-1. Edit the `config.yml` file with the required hyperparameters and Language model path.
-2. Then, run the following command to fine_tune the model:
-```bash
-python3 grpo_train.py
+**Core Dependencies:**
 ```
-If needed, replace the existing dataset with your custom data.
+pytorch
+transformers
+peft
+pyyaml
+tensorboard
+accelerate
+numpy
+```
+**Optional (recommended for efficiency):**
+```
+flash-attn
+```
+## Quick Start
 
-## Results
-The table below demonstrates the improvement in model responses before and after GRPO fine-tuning:
+### GRPO Training
 
-**Model: LlaMa-3.2-1B-Instruct**
-| <div align="center">**Before Fine-tuning**</div> | <div align="center">**After GRPO Fine-tuning**</div> |
-|---|---|
-|  **Prompt:**  | **Expand 3\*(x+1)\*(x+2)** |
-|  **Responses:** | |
-| **\<think>**<br>1. Multiply the first two terms: 3*(x+1) = 3x + 3<br>2. Multiply the result by the third term: (3x + 3)*(x+2)<br>**\</think>**<br>**\<answer>** 3x^2 + 3x + 6x + 6 **\</answer>** | **\<think>**<br>1. To expand the expression 3*(x+1)*(x+2), we need to apply the distributive property to expand the expression.<br>2. The distributive property states that a(b+c) = ab + ac.<br>3. So, we can expand the expression as 3*(x+1)*(x+2) = 3*(x*x + x*2 + 1*x + 1*2).<br>4. Now, we can simplify the expression by multiplying the terms.<br>5. 3*(x*x + x*2 + 1*x + 1*2) = 3*x^2 + 6*x + 3*x + 2.<br>6. Combine like terms.<br>7. 3*x^2 + 6*x + 3*x + 2 = 3*x^2 + 9*x + 2.<br>8. The final expanded expression is 3*x^2 + 9*x + 2.<br>**\</think>**<br>**\<answer>** 3*x^2 + 9*x + 2 **\</answer>** |
-|  **Prompt:**  | **Solve 78-(3\*(47-2)+2)** |
-|  **Responses:** | |
-| **\<think>**<br>1. First, we need to evaluate the expression inside the parentheses: 47-2<br>2. 47 - 2 = 45<br>3. Now, we multiply 3 by the result: 3 * 45 = 135<br>4. Finally, we subtract 135 from 78: 78 - 135 = -57<br>**\</think>**<br> **\<answer>** The final answer is -57 **\</answer>** | **\<think>**<br>1. Start by evaluating the expression inside the parentheses: 47-2 = 45<br>2. Now, multiply 3 by the result: 3 * 45 = 135<br>3. Add 2 to the result: 135 + 2 = 137<br>4. Finally, subtract 137 from 78: 78 - 137 = -59<br>**\</think>**<br> **\<answer>** -59 **\</answer>** |
-<!-- ------------------------------------
-------------------------------------
-**Model: Qwen2.5-0.5B-Instruct**
-| Before Fine-tuning | After GRPO Fine-tuning |
-|---|---|
-|  **Prompt:**  | **Expand 3\*(x+1)\*(x+2)** |
-| **\<think>**<br>1. Multiply the first two terms: 3*(x+1) = 3x + 3<br>2. Multiply the result by the third term: (3x + 3)*(x+2)<br>**\</think>**<br>**\<answer>** 3x^2 + 3x + 6x + 6 **\</answer>** | **\<think>**<br>1: First, I'll distribute 3 to (x+1)*(x+2)<br>2: This gives 3(x^2 + 2x + x + 2)<br>3: Simplifying the inner expression: 3(x^2 + 3x + 2)<br>4: Distributing the 3: 3x^2 + 9x + 6<br>**\</think>**<br> **\<answer>** 3x^2 + 9x + 6 **\</answer>** |
-|  **Prompt:**  | **Solve 78-(3*(47-2)+2)** |
-| **\<think>**<br>1. First, we need to evaluate the expression inside the parentheses: 47-2<br>2. 47 - 2 = 45<br>3. Now, we multiply 3 by the result: 3 * 45 = 135<br>4. Finally, we subtract 135 from 78: 78 - 135 = -57<br>**\</think>**<br> **\<answer>** -57 **\</answer>** | **\<think>**<br>1: First, I'll calculate 47-2 = 45<br>2: Then, 3*45 = 135<br>3: Next, 135+2 = 137<br>4: Finally, 78-137 = -59<br>**\</think>**<br> **\<answer>** -59 **\</answer>** | -->
+1. Configure your training in `grpo_config.yml`
 
-## Rewards accumulated per step during training
+2. Run training:
+```bash
+python grpo_train.py
+```
 
-<div align="center">
-  <div style="display: flex; justify-content: center;">
-    <img src="./results/llama.png" alt="Reward during training" width="45%" />
-    
-  </div>
-</div>
+3. Monitor with TensorBoard:
+```bash
+tensorboard --logdir=grpo_logs
+```
+
+### ES Training
+
+1. Configure your training in `es_config.yml`
+
+2. Run training:
+```bash
+python es_train.py
+```
+
+3. Monitor with TensorBoard:
+```bash
+tensorboard --logdir=es_logs
+```
+
+## Datasets and Custom Tasks
+
+### Included Datasets
+
+The project currently includes two mathematical reasoning datasets:
+
+1. **GSM8KDataset**: Grade School Math 8K problems - a dataset of grade school math word problems
+2. **MathExprDataset**: Mathematical expression evaluation and manipulation tasks
+
+Both datasets are implemented in the `datasets.py` file and can be easily swapped in the training scripts.
+
+### Adapting to Your Own Tasks
+
+To adapt this code to your own dataset and task:
+
+1. **Implement your dataset** in `datasets.py` (follow the GSM8K or MathExpr examples)
+2. **Define your reward function** in `reward.py` to match your task's success criteria
+3. **Adjust the system prompt** in the training scripts (`grpo_train.py` or `es_train.py`) to match your task format
+4. **Update the DataLoader** in the training script to use your new dataset
 
 ## Contributing
-Open an issue or submit a pull request if you have any suggestions or improvements.
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+See [LICENSE](LICENSE) file for details.
+
+## References
+
+### GRPO
+- **DeepSeekMath**: Shao et al., "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models", 2024. [arXiv:2402.03300](https://arxiv.org/abs/2402.03300)
+
+### Evolution Strategies
+- **ES at Scale for LLMs**: Qiu et al., "Evolution Strategies at Scale: LLM Fine-Tuning Beyond Reinforcement Learning", 2025. [arXiv:2509.24372](https://arxiv.org/pdf/2509.24372)
+- Salimans et al., "Evolution Strategies as a Scalable Alternative to Reinforcement Learning", 2017. [arXiv:1703.03864](https://arxiv.org/abs/1703.03864)
 
 ## Acknowledgments
-- This project utilizes models and tools made available by [Hugging Face](https://huggingface.co/).
 
-<!-- 
-
----------------------------------------
-Expand 3*(x+1)*(x+2)
-<think>
-1. First, we need to multiply the two binomials (x+1) and (x+2).
-2. To do this, we multiply each term in the first binomial by each term in the second binomial.
-3. This gives us: x*x + x*2 + 1*x + 1*2
-4. Simplifying this, we get: x^2 + 2x + x + 2
-5. Combining like terms, we get: x^2 + 3x + 2
-</think>
-<answer>x^2 + 3x + 2</answer>
----------------------------------------
----------------------------------------
-Solve 78-(3*(47-2)+2)
-<think>
-1. First, we need to evaluate the expression inside the parentheses: 47-2
-2. 47 - 2 = 45
-3. Now, we can substitute the result back into the original expression: 78 - (3 * 45)
-4. Next, we need to multiply 3 and 45: 3 * 45 = 135
-5. Now, we can substitute the result back into the expression: 78 - 135
-6. Finally, we need to subtract 135 from 78: 78 - 135 = -57
-</answer> -->
+- Built with [PyTorch](https://pytorch.org/), [Transformers](https://huggingface.co/transformers/), and [Accelerate](https://huggingface.co/docs/accelerate/)
+- Models from [Hugging Face](https://huggingface.co/)

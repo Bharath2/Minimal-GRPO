@@ -1,0 +1,34 @@
+# Model Identifier on HuggingFace or local path
+model_identifier: "Qwen/Qwen2.5-1.5B-Instruct"  # meta-llama/Llama-3.2-1B-Instruct
+
+# Model cache directory (set to "./models" to download to local directory, or None for default HF cache)
+cache_dir: "./models"
+
+# Training parameters
+batch_size: 1                 # Batch size for training data
+group_size: 16                # Group size used in GRPO
+rollouts_per_step: 16         # Number of rollouts (batches) before updating model
+updates_per_step: 4           # Number of weight updates per step
+kl_weight: 0.05               # Weight for KL divergence from reference model
+learning_rate: 1e-5           # Learning rate for optimizer
+max_completion_len: 512       # Maximum total sequence length (input + output tokens)
+
+# File paths
+checkpoint_dir: "grpo_checkpoints"  # Directory to save model checkpoints
+log_dir: "grpo_logs"                # Directory for tensorboard logs
+
+# LoRA configuration
+use_lora: true                # Whether to use LoRA for parameter-efficient fine-tuning
+lora_config:
+  r: 8                        # LoRA rank
+  alpha: 16                   # LoRA alpha parameter for scaling
+  dropout: 0.1                # Dropout probability for LoRA layers
+  target_modules:             # Modules to apply LoRA to
+    - "q_proj"
+    # - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    # - "up_proj"
+    # - "down_proj"
+

@@ -1,0 +1,20 @@
+# Model Identifier on HuggingFace or local path
+model_identifier: "Qwen/Qwen2.5-1.5B-Instruct"  # meta-llama/Llama-3.2-1B-Instruct
+
+# Model cache directory (set to "./models" to download to local directory, or None for default HF cache)
+cache_dir: "./models"
+
+# Evolutionary Strategy parameters
+population_size: 32           # N: Number of parameter perturbations per iteration
+noise_scale: 0.001            # σ (sigma): Standard deviation of Gaussian noise for parameter perturbation
+learning_rate: 0.002          # α (alpha): Learning rate for parameter updates
+max_completion_len: 640       # Maximum total sequence length (input + output tokens)
+total_iterations: 100        # T: Total number of ES outer iterations (batches)
+prompts_per_iteration: 64     # Number of prompts to evaluate per iteration 
+
+# File paths
+checkpoint_dir: "es_checkpoints"  # Directory to save model checkpoints
+log_dir: "es_logs"                # Directory for tensorboard logs
+
+# Checkpoint saving frequency
+save_every: 32                # Save checkpoint every N iterations
