@@ -7,26 +7,6 @@ A minimal and hackable implementation of fine-tuning Open Language Models (LLaMA
 
 Both approaches are designed to be simple, customizable, and effective for reinforcement learning from verifiable rewards. This repo currently includes **GSM8K** and **MathExpr** datasets, and can be easily adapted to other datasets and tasks.
 
-### GRPO (Group Relative Policy Optimization)
-
-Based on the approach from [DeepSeekMath](https://arxiv.org/abs/2402.03300), GRPO is a gradient-based reinforcement learning algorithm that:
-- Uses group-based advantage estimation for stable policy updates
-- Combines PPO-style clipping with KL divergence regularization
-- Maintains a reference model to prevent catastrophic forgetting
-- Efficiently leverages gradient information for policy improvement
-- **Uses LoRA (Low-Rank Adaptation)** for parameter-efficient fine-tuning
-
-### ES (Evolution Strategies)
-
-Based on recent work showing ES can scale to billion-parameter LLMs ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372)), Evolution Strategies is a gradient-free optimization approach inspired by natural evolution. It:
-- Perturbs model parameters with Gaussian noise
-- Evaluates fitness using task-specific rewards
-- Updates parameters based on relative performance (z-score normalization)
-- Requires only forward passes (no backpropagation)
-- Less prone to reward hacking than RL methods
-
-Recent research demonstrates that ES can successfully fine-tune LLMs with billions of parameters, outperforming RL methods in sample efficiency, robustness, and stability, particularly on tasks with sparse outcome-only rewards.
-
 ## Features
 
 - ✅ **Clean, minimal codebase**: Easy to understand and modify
@@ -55,32 +35,17 @@ flash-attn
 ```
 ## Quick Start
 
-### GRPO Training
+1. Configure your training in `grpo_config.yml` or `es_config.yml`
 
-1. Configure your training in `grpo_config.yml`
-
-2. Run training:
+2. Run the corresponding training script:
 ```bash
 python grpo_train.py
 ```
 
+
 3. Monitor with TensorBoard:
 ```bash
 tensorboard --logdir=grpo_logs
-```
-
-### ES Training
-
-1. Configure your training in `es_config.yml`
-
-2. Run training:
-```bash
-python es_train.py
-```
-
-3. Monitor with TensorBoard:
-```bash
-tensorboard --logdir=es_logs
 ```
 
 ## Datasets and Custom Tasks
@@ -89,8 +54,8 @@ tensorboard --logdir=es_logs
 
 The project currently includes two mathematical reasoning datasets:
 
-1. **GSM8KDataset**: Grade School Math 8K problems - a dataset of grade school math word problems
-2. **MathExprDataset**: Mathematical expression evaluation and manipulation tasks
+1. **GSM8KDataset**: Grade School Math 8K problems by OpenAI
+2. **MathExprDataset**: Mathematical expression evaluation tasks
 
 Both datasets are implemented in the `datasets.py` file and can be easily swapped in the training scripts.
 
@@ -103,20 +68,35 @@ To adapt this code to your own dataset and task:
 3. **Adjust the system prompt** in the training scripts (`grpo_train.py` or `es_train.py`) to match your task format
 4. **Update the DataLoader** in the training script to use your new dataset
 
+
+### GRPO (Group Relative Policy Optimization)
+
+Based on the approach from [DeepSeekMath](https://arxiv.org/abs/2402.03300), GRPO is a gradient-based reinforcement learning algorithm that:
+- Uses group-based advantage estimation for stable policy updates
+- Combines PPO-style clipping with KL divergence regularization
+- Maintains a reference model to prevent catastrophic forgetting
+- Efficiently leverages gradient information for policy improvement
+- **Uses LoRA (Low-Rank Adaptation)** for parameter-efficient fine-tuning
+
+### ES (Evolution Strategies)
+
+Based on recent work showing ES can scale to billion-parameter LLMs ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372)), Evolution Strategies is a gradient-free optimization approach inspired by natural evolution. It:
+- Perturbs model parameters with Gaussian noise
+- Evaluates fitness using task-specific rewards
+- Updates parameters based on relative performance (z-score normalization)
+- Requires only forward passes (no backpropagation)
+- Less prone to reward hacking than RL methods
+
+Recent research demonstrates that ES can successfully fine-tune LLMs with billions of parameters, outperforming RL methods in sample efficiency, robustness, and stability, particularly on tasks with sparse outcome-only rewards.
+
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
 
-## License
-
-See [LICENSE](LICENSE) file for details.
-
 ## References
 
-### GRPO
 - **DeepSeekMath**: Shao et al., "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models", 2024. [arXiv:2402.03300](https://arxiv.org/abs/2402.03300)
-
-### Evolution Strategies
 - **ES at Scale for LLMs**: Qiu et al., "Evolution Strategies at Scale: LLM Fine-Tuning Beyond Reinforcement Learning", 2025. [arXiv:2509.24372](https://arxiv.org/pdf/2509.24372)
 - Salimans et al., "Evolution Strategies as a Scalable Alternative to Reinforcement Learning", 2017. [arXiv:1703.03864](https://arxiv.org/abs/1703.03864)
 
