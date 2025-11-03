@@ -2,8 +2,8 @@
 
 A minimal and hackable implementation of fine-tuning Open Language Models (LLaMA, Qwen, etc.) on mathematical reasoning tasks using two approaches:
 
-- **GRPO (Group Relative Policy Optimization)**: Gradient-based RL policy optimization with support for LoRA adaptation
-- **ES (Evolution Strategies)**: Gradient-free evolutionary optimization with full parameter fine-tuning
+- **GRPO (Group Relative Policy Optimization)**: Gradient-based RL policy optimization introduced by [DeepSeekMath](https://arxiv.org/abs/2402.03300), with support for LoRA adaptation
+- **ES (Evolution Strategies)**: Gradient-free evolutionary optimization with full parameter fine-tuning based recent work by ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372))
 
 Both approaches are designed to be simple, customizable, and effective for reinforcement learning from verifiable rewards. This repo currently includes **GSM8K** and **MathExpr** datasets, and can be easily adapted to other datasets and tasks.
 
@@ -17,22 +17,24 @@ Both approaches are designed to be simple, customizable, and effective for reinf
 - ✅ **Multiple datasets**: GSM8K and MathExpr included, easily extensible
 - ✅ **Custom rewards**: Easily adapt to your own tasks and reward functions
 
-## Requirements
+## Setup
 
-**Core Dependencies:**
+1. **Clone the repository:**
+```bash
+git clone https://github.com/yourusername/Minimal-GRPO.git
+cd Minimal-GRPO
 ```
-pytorch
-transformers
-peft
-pyyaml
-tensorboard
-accelerate
-numpy
+
+2. **Install dependencies:**
+```bash
+pip install -r requirements.txt
 ```
-**Optional (recommended for efficiency):**
+
+3. **Optional (recommended for efficiency):**
+```bash
+pip install flash-attn --no-build-isolation
 ```
-flash-attn
-```
+
 ## Quick Start
 
 1. Configure your training in `grpo_config.yml` or `es_config.yml`
@@ -69,26 +71,23 @@ To adapt this code to your own dataset and task:
 4. **Update the DataLoader** in the training script to use your new dataset
 
 
-### GRPO (Group Relative Policy Optimization)
+## GRPO (Group Relative Policy Optimization)
 
-Based on the approach from [DeepSeekMath](https://arxiv.org/abs/2402.03300), GRPO is a gradient-based reinforcement learning algorithm that:
+[GRPO](https://arxiv.org/abs/2402.03300) is a gradient-based reinforcement learning algorithm that:
 - Uses group-based advantage estimation for stable policy updates
 - Combines PPO-style clipping with KL divergence regularization
 - Maintains a reference model to prevent catastrophic forgetting
 - Efficiently leverages gradient information for policy improvement
 - **Uses LoRA (Low-Rank Adaptation)** for parameter-efficient fine-tuning
 
-### ES (Evolution Strategies)
+## ES (Evolution Strategies)
 
-Based on recent work showing ES can scale to billion-parameter LLMs ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372)), Evolution Strategies is a gradient-free optimization approach inspired by natural evolution. It:
+Recent research demonstrates that ES can successfully fine-tune LLMs with billions of parameters ([Qiu et al., 2025](https://arxiv.org/pdf/2509.24372)), outperforming RL methods in sample efficiency, robustness, and stability, particularly on tasks with sparse outcome-only rewards, ES is inspired by natural evolution. It:
 - Perturbs model parameters with Gaussian noise
 - Evaluates fitness using task-specific rewards
 - Updates parameters based on relative performance (z-score normalization)
 - Requires only forward passes (no backpropagation)
 - Less prone to reward hacking than RL methods
-
-Recent research demonstrates that ES can successfully fine-tune LLMs with billions of parameters, outperforming RL methods in sample efficiency, robustness, and stability, particularly on tasks with sparse outcome-only rewards.
-
 
 ## Contributing
 
